@@ -31,6 +31,6 @@ fn main() {
         let number: f64 = aud.trim().parse().expect("cannot parse line. Is it a string?");
         println!("the value in GBP (british pound) is: {:.2}", number * gbp);
     }
-
+    // hello git!
 
 }
