@@ -32,4 +32,5 @@ fn main() {
         println!("the value in GBP (british pound) is: {:.2}", number * gbp);
     }
 
+
 }
