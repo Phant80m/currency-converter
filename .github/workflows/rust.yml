@@ -24,4 +24,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: converter.zip
-        path: target/debug
+        path: target/debug/windows
