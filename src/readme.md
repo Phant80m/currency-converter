@@ -5,4 +5,6 @@
 # how to run:
 
 `cargo run`
-alternatively you can go to ./target/debug/<binary>
+alternatively you can go to ./target/debug/windows.exe
+
+
