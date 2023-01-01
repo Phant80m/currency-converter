@@ -15,17 +15,10 @@ fn main() {
     }
 
     fn aud2usd() {
-        // us dollar float: (used to compare to the input user gives:)
         let usd: f64 = 0.681359;
-    
-        // get user input 
         let mut aud = String::new();
         std::io::stdin().read_line(&mut aud).expect("cannot read line");
-    
-        // converts the string to a float ( f64):
         let number: f64 = aud.trim().parse().expect("Cannot Parse line. Is it a float?");
-    
-        // prints the output value in USD:sd
         println!("the value in USD is: {:.2}", number * usd);
     }
     fn aud2gbp() {
