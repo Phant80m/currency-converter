@@ -5,3 +5,5 @@ currency converter written in rust
 #
 use at your own risk, WILL be inacurate. :) 
 enjoy 
+
+## Open src/ to see how to compile!
