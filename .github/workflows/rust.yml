@@ -23,5 +23,5 @@ jobs:
     - name: Upload binary artifact
       uses: actions/upload-artifact@v2
       with:
-        name: converter-main.zip
-        path: target/debug/
+        name: currency-converter.exe
+        path: target/debug/windows.exe
