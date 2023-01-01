@@ -12,7 +12,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -23,5 +23,5 @@ jobs:
     - name: Upload binary artifact
       uses: actions/upload-artifact@v2
       with:
-        name: converter.zip
-        path: target/debug/windows
+        name: converter-main.zip
+        path: target/debug/
