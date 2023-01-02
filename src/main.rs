@@ -13,6 +13,7 @@ fn main() {
         "cad" => convert("cad", 0.92249222),
         "nzd" => convert("nzd", 0.9330),
         "zar" => convert("zar", 0.0863),
+        "secret" => convert("secret",0.00),
         _ => println!("Invalid choice"),
     }
 }
@@ -24,3 +25,4 @@ fn convert(currency: &str, rate: f64) {
     println!("the value in {} is: {:.2}", currency.to_uppercase(), number * rate);
 }
 
+// should really 
