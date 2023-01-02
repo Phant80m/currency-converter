@@ -21,5 +21,6 @@ fn convert(currency: &str, rate: f64) {
     let mut aud = String::new();
     std::io::stdin().read_line(&mut aud).expect("cannot read line");
     let number: f64 = aud.trim().parse().expect("Cannot Parse line. Is it a float?");
-    println!("the value in {} is: {:.2}", currency, number * rate);
+    println!("the value in {} is: {:.2}", currency.to_uppercase(), number * rate);
 }
+
