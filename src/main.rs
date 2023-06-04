@@ -1,28 +1,55 @@
+use clap::Parser;
+use owo_colors::OwoColorize;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+
+#[derive(Serialize, Deserialize)]
+struct Jcurrency {
+    rates: Value,
+}
+
+#[derive(Debug, Parser)]
+struct Args {
+    #[arg(long, short)]
+    input: String,
+    #[arg(short, long)]
+    output: String,
+    #[arg(short, long)]
+    amount: i32,
+}
+
 fn main() {
-    // asks for options!
-    let mut choice = String::new();
-    println!("Convert [aud] to [usd] [gbp] [cad] [nzd] [zar], choices:\n usd\n gbp\n cad \n nzd \n zar\n");
-    std::io::stdin().read_line(&mut choice).expect("failed to read line");
+    let arguments = Args::parse();
+    let _cconvert = convert(arguments.input.clone());
 
+    let output = deserialize(_cconvert, arguments.output.to_uppercase(), arguments.amount);
 
-    // options for currency:
-    let currency = choice.trim();
-    match currency {
-        "usd" => convert("usd", 0.681359),
-        "gbp" => convert("gbp", 0.5637),
-        "cad" => convert("cad", 0.92249222),
-        "nzd" => convert("nzd", 0.9330),
-        "zar" => convert("zar", 0.0863),
-        "secret" => convert("secret",0.00),
-        _ => println!("Invalid choice"),
-    }
-}
-// convert function!
-fn convert(currency: &str, rate: f64) {
-    let mut aud = String::new();
-    std::io::stdin().read_line(&mut aud).expect("cannot read line");
-    let number: f64 = aud.trim().parse().expect("Cannot Parse line. Is it a float?");
-    println!("the value in {} is: {:.2}", currency.to_uppercase(), number * rate);
+    println!(
+        "{} {} = {} {}",
+        arguments.amount.purple().bold(),
+        arguments.input.to_uppercase().red().bold(),
+        output.purple().bold(),
+        arguments.output.to_uppercase().green().bold()
+    );
 }
 
-// should really 
+fn convert(currency: String) -> String {
+    let body: String =
+        ureq::get(format!("https://api.exchangerate-api.com/v4/latest/{}", currency).as_str())
+            .call()
+            .expect("Failed to call fn")
+            .into_string()
+            .expect("failed to stringify");
+    body
+}
+
+// for example Currency * amount
+fn deserialize(input: String, currency: String, amount: i32) -> f64 {
+    let jcurrency: Jcurrency = serde_json::from_str(input.as_str()).expect("");
+
+    let cout = jcurrency.rates[currency.as_str()]
+        .as_f64()
+        .expect("failed to floatify it");
+
+    cout * amount as f64
+}
