@@ -1,4 +1,4 @@
-name: Rust
+name: ARM CPU compiler
 
 on:
   push:
@@ -19,11 +19,11 @@ jobs:
       uses: pguyot/arm-runner-action@v2.5.2
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --release --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test --verbose --release
     - name: Upload binary artifact
       uses: actions/upload-artifact@v3.1.1
       with:
-        name: converter-main.arm.zip
-        path: target/debug/
+        name: cconvert-arm-gnu
+        path: target/release/cconvert
