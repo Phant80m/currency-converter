@@ -10,7 +10,7 @@ cconvert is a command-line tool for currency conversion. It allows you to conver
 
 To install cconvert, follow these steps:
 
-1. Go to the [GitHub Actions page](https://github.com/username/repo/actions).
+1. Go to the [GitHub Actions page](https://github.com/phant80m/currency-converter/actions).
 2. Locate the latest release of cconvert.
 3. Click on the release to view the details.
 4. Download the binary file for your operating system.
