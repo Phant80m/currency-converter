@@ -15,16 +15,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Rust
-      uses: actions/setup-rust@v1
-      with:
-        rust-version: stable
     - name: Build
       run: cargo build --release --verbose
     - name: Run tests
       run: cargo test --release --verbose
     - name: Upload binary artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3.1.1
       with:
         name: cconvert-win-MSVC
         path: target/release/cconvert.exe
