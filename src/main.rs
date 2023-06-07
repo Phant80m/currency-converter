@@ -1,29 +1,31 @@
 use clap::Parser;
 use owo_colors::OwoColorize;
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
-
-#[derive(Serialize, Deserialize)]
-struct Jcurrency {
-    rates: Value,
-}
-
+mod convert;
+use cconvert::{NAME, VERSION};
+use convert::{convert, deserialize};
 #[derive(Debug, Parser)]
+#[command(disable_help_flag = true)]
 struct Args {
-    #[arg(short, long)]
+    #[arg(long)]
+    help: bool,
+    #[arg(short, long, default_value = "~")]
     input: String,
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "~")]
     output: String,
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "0")]
     amount: i32,
 }
 
 fn main() {
     let arguments = Args::parse();
-    let _cconvert = convert(arguments.input.clone());
+    let cconvert = convert(arguments.input.clone());
+    if arguments.help {
+        help()
+    }
+    required(&arguments);
 
     let output = match deserialize(
-        _cconvert.unwrap_or_default(),
+        cconvert.unwrap_or_default(),
         arguments.output.to_uppercase(),
         arguments.amount,
     ) {
@@ -43,38 +45,60 @@ fn main() {
     );
 }
 
-fn convert(currency: String) -> Result<String, String> {
-    let body: String =
-        ureq::get(format!("https://api.exchangerate-api.com/v4/latest/{}", currency).as_str())
-            .call()
-            .map_err(|err| format!("{} {}", "Failed to call function".red().bold(), err))?
-            .into_string()
-            .map_err(|err| format!("{} {}", "Failed to index Currency".red().bold(), err))?;
-    Ok(body)
+fn required(arguments: &Args) {
+    if arguments.input == "~" {
+        println!(
+            "{}",
+            "Supply an Argument for input: \n -i | --input <currency>"
+                .red()
+                .bold()
+        );
+        std::process::exit(0)
+    }
+    if arguments.output == "~" {
+        println!("Supply an Argument for output: \n -o | --output <currency>");
+        std::process::exit(0)
+    }
+
+    if arguments.amount == 0 {
+        println!("Supply an Argument for amount (value cannot be 0): \n -a | --amount <NUMBER>");
+        std::process::exit(0)
+    }
 }
 
-// for example Currency * amount
-fn deserialize(input: String, currency: String, amount: i32) -> Result<f64, String> {
-    let jcurrency: Jcurrency = match serde_json::from_str(input.as_str()) {
-        Ok(currency_out) => currency_out,
-        Err(_) => {
-            return Err(format!(
-                "{} {} {}",
-                "one or more Currencies are unknown:".bold().red(),
-                input.bold().yellow(),
-                "\nDoes it exist?".bold().red()
-            ))
-        }
-    };
+fn help() {
+    let help = format!(
+        "│{}                                 │\n│{}                   │\n│{}                  │\n│{}                    │",
+        "   Tool Help:".bold().blue(),
+        "    -i | --input <CURRENCY>".bold().green(),
+        "    -o | --output <CURRENCY>".bold().green(),
+        "    -a | --amount <NUMBER>".bold().green(),
+    );
+    println!(
+        "{}",
+        "┌──────────────────────────────────────────────┐".blue()
+    );
+    println!(
+        "{}{} {}{}",
+        "│           Welcome to ".blue(),
+        cconvert::NAME.to_string().purple(),
+        cconvert::VERSION.bright_red(),
+        "          │".blue(),
+    );
+    println!(
+        "{}",
+        "│     A multi-purpose command-line interface   │".blue()
+    );
+    println!(
+        "{}",
+        "│          for conversion of currency.         │".blue()
+    );
 
-    let cout = jcurrency.rates[currency.as_str()].as_f64().ok_or_else(|| {
-        format!(
-            "{} {} {}",
-            "Unknown Currency:".bold().red(),
-            currency.bold().yellow(),
-            "\nHave you spelled it right?".bold().red(),
-        )
-    })?;
+    println!("{help}");
 
-    Ok(cout * amount as f64)
+    println!(
+        "{}",
+        "└──────────────────────────────────────────────┘".blue()
+    );
+    std::process::exit(0);
 }
