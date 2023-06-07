@@ -11,17 +11,29 @@ env:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Rust
+      uses: actions/setup-rust@v1
+      with:
+        rust-version: stable
     - name: Build
       run: cargo build --release --verbose
     - name: Run tests
       run: cargo test --release --verbose
     - name: Upload binary artifact
-      uses: actions/upload-artifact@v3.1.1
+      uses: actions/upload-artifact@v2
       with:
         name: cconvert-win-MSVC
         path: target/release/cconvert.exe
+    - name: Create Release
+      uses: marvinpinto/action-automatic-releases@v1.2.1
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          *.exe
