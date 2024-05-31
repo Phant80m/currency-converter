@@ -1,3 +1,5 @@
+⚠️ Project is discontinued, check out:
+https://github.com/phant80m/Tahwil, updated version ⚠️
 # cconvert Documentation
 
 ## CConvert:
